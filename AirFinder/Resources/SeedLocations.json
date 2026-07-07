@@ -1,0 +1,78 @@
+[
+  {
+    "id": "2D42C1A3-0F6E-4C54-8D52-2F96C8E3D101",
+    "name": "Demo Free Air - West Loop",
+    "addressLine1": "1200 W Randolph St",
+    "city": "Chicago",
+    "state": "IL",
+    "postalCode": "60607",
+    "latitude": 41.8842,
+    "longitude": -87.6592,
+    "pricingStatus": "free",
+    "notes": "Demo seed entry. Replace with verified locations before launch.",
+    "source": "demo-seed",
+    "lastVerifiedAt": "2024-08-30T12:00:00Z",
+    "distanceMeters": null
+  },
+  {
+    "id": "7E92E7A2-DB55-4C28-9AF1-39A0B66A2A02",
+    "name": "Demo Paid Air - South Loop",
+    "addressLine1": "1550 S Wabash Ave",
+    "city": "Chicago",
+    "state": "IL",
+    "postalCode": "60605",
+    "latitude": 41.8605,
+    "longitude": -87.6254,
+    "pricingStatus": "paid",
+    "notes": "Demo seed entry. Marked paid with a dollar-sign badge.",
+    "source": "demo-seed",
+    "lastVerifiedAt": "2024-08-30T12:00:00Z",
+    "distanceMeters": null
+  },
+  {
+    "id": "C8AE7A93-5D06-4D85-8D91-BF1E8E0A3A03",
+    "name": "Demo Free Air - Lakeview",
+    "addressLine1": "3200 N Clark St",
+    "city": "Chicago",
+    "state": "IL",
+    "postalCode": "60657",
+    "latitude": 41.9389,
+    "longitude": -87.6533,
+    "pricingStatus": "free",
+    "notes": "Demo seed entry for nearby search behavior.",
+    "source": "demo-seed",
+    "lastVerifiedAt": "2024-08-30T12:00:00Z",
+    "distanceMeters": null
+  },
+  {
+    "id": "1B7A66CF-5A2E-40B2-8D73-7D1AB2C4E304",
+    "name": "Demo Unknown Air - Evanston",
+    "addressLine1": "1700 Sherman Ave",
+    "city": "Evanston",
+    "state": "IL",
+    "postalCode": "60201",
+    "latitude": 42.0462,
+    "longitude": -87.694,
+    "pricingStatus": "unknown",
+    "notes": "Demo seed entry with unknown pricing.",
+    "source": "demo-seed",
+    "lastVerifiedAt": "2024-08-30T12:00:00Z",
+    "distanceMeters": null
+  },
+  {
+    "id": "A0C0E28E-5F73-4A69-8C6E-10B176D2A505",
+    "name": "Demo Free Air - Oak Park",
+    "addressLine1": "714 Lake St",
+    "city": "Oak Park",
+    "state": "IL",
+    "postalCode": "60301",
+    "latitude": 41.8889,
+    "longitude": -87.7885,
+    "pricingStatus": "free",
+    "notes": "Demo seed entry west of the city.",
+    "source": "demo-seed",
+    "lastVerifiedAt": "2024-08-30T12:00:00Z",
+    "distanceMeters": null
+  }
+]
+
