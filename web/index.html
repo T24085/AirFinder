@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="theme-color" content="#f5f1e8" />
+    <title>AirFinder</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module" defer src="./app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="overlay overlay--header">
+        <div class="brand">
+          <div class="brand__mark" aria-hidden="true">A</div>
+          <div>
+            <div class="brand__name">AirFinder</div>
+            <div class="brand__sub">Free tire air, paid spots, and pending submissions</div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <label class="search" aria-label="Search locations">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m21 21-4.3-4.3" />
+              <circle cx="10.5" cy="10.5" r="6.5" />
+            </svg>
+            <input id="searchInput" type="search" placeholder="Search places or cities" autocomplete="off" />
+          </label>
+
+          <button id="locateButton" class="icon-button" type="button" title="Use my location">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9 4.03 9 9 9Z" />
+              <path d="M12 8v4l2.75 2.75" />
+              <path d="M12 12v.01" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="stats" id="statsBar" aria-live="polite"></div>
+      </aside>
+
+      <main class="map-layout">
+        <section class="map-frame">
+          <div id="map" class="map" aria-label="Map of tire air locations"></div>
+
+          <div class="floating-hint">
+            <span class="dot dot--free"></span>
+            <span>Free</span>
+            <span class="dot dot--paid"></span>
+            <span>$</span>
+            <span class="dot dot--pending"></span>
+            <span>Pending</span>
+          </div>
+        </section>
+
+        <section class="drawer" aria-label="AirFinder controls and results">
+          <div class="drawer__handle" aria-hidden="true"></div>
+
+          <nav class="segments" aria-label="View filters">
+            <button class="segment is-active" data-segment="all" type="button">All</button>
+            <button class="segment" data-segment="free" type="button">Free</button>
+            <button class="segment" data-segment="paid" type="button">$</button>
+            <button class="segment" data-segment="unknown" type="button">Unknown</button>
+            <button class="segment" data-segment="pending" type="button">Pending</button>
+          </nav>
+
+          <div class="drawer__header">
+            <div>
+              <h1>Find air fast</h1>
+              <p>Tap a marker, search nearby, or submit a location for review.</p>
+            </div>
+            <button id="submitButton" class="primary-button" type="button">Add a stop</button>
+          </div>
+
+          <div class="drawer__content" id="panelContent"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="locationCardTemplate">
+      <article class="card location-card">
+        <div class="card__top">
+          <div>
+            <h2></h2>
+            <p class="location-card__address"></p>
+          </div>
+          <div class="badge"></div>
+        </div>
+        <div class="location-card__meta"></div>
+      </article>
+    </template>
+
+    <template id="detailTemplate">
+      <article class="detail-card">
+        <header class="detail-card__header">
+          <div>
+            <h2></h2>
+            <p></p>
+          </div>
+          <div class="badge"></div>
+        </header>
+        <dl class="detail-grid"></dl>
+        <div class="detail-card__notes"></div>
+        <div class="detail-actions">
+          <button class="secondary-button" data-action="maps" type="button">Open in Maps</button>
+          <button class="secondary-button" data-action="close" type="button">Back to list</button>
+        </div>
+      </article>
+    </template>
+
+    <template id="submissionTemplate">
+      <article class="detail-card">
+        <header class="detail-card__header">
+          <div>
+            <h2>Add a stop</h2>
+            <p>Anonymous submissions stay in pending review until approved.</p>
+          </div>
+          <div class="badge badge--pending">Pending</div>
+        </header>
+
+        <form id="submissionForm" class="submission-form">
+          <label>
+            Place name
+            <input name="name" type="text" placeholder="Quick Tire Air" required />
+          </label>
+          <label>
+            Street address
+            <input name="addressLine1" type="text" placeholder="123 Main St" required />
+          </label>
+          <div class="grid-two">
+            <label>
+              City
+              <input name="city" type="text" placeholder="Chicago" />
+            </label>
+            <label>
+              State
+              <input name="state" type="text" placeholder="IL" />
+            </label>
+          </div>
+          <div class="grid-two">
+            <label>
+              ZIP code
+              <input name="postalCode" type="text" placeholder="60607" />
+            </label>
+            <label>
+              Pricing
+              <select name="pricingStatus">
+                <option value="unknown">Unknown</option>
+                <option value="free">Free</option>
+                <option value="paid">Paid</option>
+              </select>
+            </label>
+          </div>
+          <div class="grid-two">
+            <label>
+              Latitude
+              <input name="latitude" type="number" step="any" required />
+            </label>
+            <label>
+              Longitude
+              <input name="longitude" type="number" step="any" required />
+            </label>
+          </div>
+          <label>
+            Notes
+            <textarea name="notes" rows="4" placeholder="Helpful info for reviewers"></textarea>
+          </label>
+
+          <div class="submission-actions">
+            <button class="secondary-button" id="useCenterButton" type="button">Use map center</button>
+            <button class="primary-button" type="submit">Submit anonymously</button>
+          </div>
+        </form>
+      </article>
+    </template>
+
+    <template id="queueTemplate">
+      <article class="detail-card">
+        <header class="detail-card__header">
+          <div>
+            <h2>Pending review</h2>
+            <p>Local submissions saved in your browser.</p>
+          </div>
+          <div class="badge badge--pending">Review</div>
+        </header>
+        <div id="queueList" class="queue-list"></div>
+      </article>
+    </template>
+  </body>
+</html>
